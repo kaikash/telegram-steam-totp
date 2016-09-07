@@ -51,7 +51,7 @@ var parseCommand = function(id, command, argumets) {
 
   if(command == 'code') {
     data = JSON.parse(fs.readFileSync(config.filename));
-    if(argumets.length == 0 && data[id])
+    if(argumets.length == 0 && data[id] && Object.keys(data[id]).length > 0)
       return responseCommand(id, command, SteamTotp.generateAuthCode(data[id][Object.keys(data[id])[0]]));
     if(!data[id] || !data[id][argumets[0]]) 
       return response(id, 'Code for ' + argumets[0] + ' doesn\'t exist. You can set it by /set <name> <shared_secret>.');
