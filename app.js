@@ -43,7 +43,7 @@ var parseCommand = function(id, command, argumets) {
     data[[id,argumets[0]].join('@@@')] = argumets[1];
     console.log(data);
     fs.writeFileSync(config.filename, JSON.stringify(data));
-    return responseCommand(id, command, argumets[1]);
+    return responseCommand(id, command, argumets[0]);
   }
 
   if(command == 'code') {
@@ -64,7 +64,6 @@ var response = function(id, message) {
 };
 
 var responseCommand = function(id, command, arg) {
-  console.log(id, command, arg);
   if(arg) {
     return response(id, commands[command].replace('??', arg));
   } else {
