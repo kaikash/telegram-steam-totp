@@ -42,18 +42,20 @@ var parseCommand = function(id, command, argumets) {
     if(argumets.length < 2)
       return response(id, 'You should run command /set <name> <shared_secret>.');
     data = JSON.parse(fs.readFileSync(config.filename));
-    data[[id,argumets[0]].join('@@@')] = argumets[1];
+    if(data[id] == undefined)
+      data[id] = {};
+    data[id][argumets[0]] = argumets[1];
     fs.writeFileSync(config.filename, JSON.stringify(data));
     return responseCommand(id, command, argumets[0]);
   }
 
   if(command == 'code') {
     data = JSON.parse(fs.readFileSync(config.filename));
-    if(argumets.length < 1)
-      return response(id, 'You should run command /code <name>');
-    if(data[[id,argumets[0]].join('@@@')] == undefined) 
+    if(argumets.length == 0 && data[id])
+      return responseCommand(id, command, SteamTotp.generateAuthCode(data[id][Object.keys(data[id])[0]]));
+    if(!data[id] || !data[id][argumets[0]]) 
       return response(id, 'Code for ' + argumets[0] + ' doesn\'t exist. You can set it by /set <name> <shared_secret>.');
-    return responseCommand(id, command, SteamTotp.generateAuthCode(data[[id,argumets[0]].join('@@@')]));
+    return responseCommand(id, command, SteamTotp.generateAuthCode(data[id][argumets[0]]));
   }
 };
 
