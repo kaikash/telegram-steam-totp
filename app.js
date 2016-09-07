@@ -17,6 +17,8 @@ var commands = {
   'code': 'Your code: ??'
 };
 
+console.log('telegram steam totp bot is running..');
+
 api.on('message', function(message)
 {
   if(message.text[0] == '/') {
@@ -41,7 +43,6 @@ var parseCommand = function(id, command, argumets) {
       return response(id, 'You should run command /set <name> <shared_secret>.');
     data = JSON.parse(fs.readFileSync(config.filename));
     data[[id,argumets[0]].join('@@@')] = argumets[1];
-    console.log(data);
     fs.writeFileSync(config.filename, JSON.stringify(data));
     return responseCommand(id, command, argumets[0]);
   }
