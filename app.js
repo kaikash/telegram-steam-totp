@@ -14,7 +14,7 @@ var commands = {
   'start':  'Hello, I\'m steam totp bot! I will generate steam codes for you! You can set keys by: /set <name> ' + 
             '<shared_secret>. After this you can do /code <name>',
   'set': 'Your shared_secret for ?? has been saved',
-  'code': 'Your code: ??'
+  'code': ['Your code: ', '??']
 };
 
 console.log('telegram steam totp bot is running..');
@@ -59,18 +59,30 @@ var parseCommand = function(id, command, argumets) {
   }
 };
 
-var response = function(id, message) {
-  api.sendMessage({
+var response = function(id, message, arg) {
+  if(arg)
+    message = message.replace('??', arg);
+  return api.sendMessage({
     chat_id: id,
     text: message
   });
 };
 
+var responseLoop = function(id, messages, arg, i) {
+  if(i == undefined)
+    i = 0;
+  response(id, messages[i], arg)
+  .then(function(data) {
+    if(i >= messages.length - 1)
+      return Promise.resolve(data);
+    else
+      return responseLoop(id, messages, arg, i+1);
+  });
+}
+
 var responseCommand = function(id, command, arg) {
-  if(arg) {
-    return response(id, commands[command].replace('??', arg));
-  } else {
-    return response(id, commands[command])
-  }
+  if(typeof commands[command] == 'object') 
+    return responseLoop(id, commands[command], arg);
+  else return response(id, commands[command], arg);
 }
 
