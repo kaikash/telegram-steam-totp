@@ -1,0 +1,11 @@
+{
+  "name": "telegram-steam-totp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/kaikash/telegram-steam-totp.git",
+  "license": "MIT",
+  "dependencies": {
+    "steam-totp": "^2.1.0",
+    "telegram-bot-api": "^1.2.0"
+  }
+}
